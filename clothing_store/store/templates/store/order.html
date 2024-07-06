@@ -1,0 +1,13 @@
+{% extends 'store/base.html' %}
+ 
+{% block content %}
+
+                    <strong>Статус:</strong> {{ order.status_display}}</p>
+                    <strong>Продукт:</strong> {{ order.product_name }}</p>
+                    <strong>Количество:</strong> {{ order.quantity }}</p>
+                    <strong>Цена:</strong> {{ order.price }}</p>
+                    <strong>Дата:</strong> {{ order.date }}</p>
+                    <strong>Адрес:</strong> {{ order.address }}</p>
+                    <strong>Телефон:</strong> {{ order.phone }}</p>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'store/base.html' %}
+ 
+{% block content %}
+<h1>{{title}}</h1>
+<ul>
+         {% for order in orders %}
+         <li>
+                    <strong>Статус:</strong> {{ order.status_display }}<br>
+                    <strong>Продукт:</strong> {{ order.product_name }}<br>
+                    <strong>Количество:</strong> {{ order.quantity }}<br>
+                    <strong>Цена:</strong> {{ order.price }}<br>
+                    <strong>Дата:</strong> {{ order.date }}<br>
+         </li>
+         {% endfor %}
+</ul>
+{% endblock %}

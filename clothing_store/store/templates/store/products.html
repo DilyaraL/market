@@ -1,0 +1,18 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+{% include 'store/category.html' %}
+<h1>{{title}}</h1>
+<ul class="product-list">
+         {% for p in products %}
+         <li>
+                    <a href="{% url 'one_product' p.slug %}" class="product-title">
+                        <img src="{{ p.image.url }}" class="product-image">
+                    </a>
+                   <h3> <a href="{% url 'one_product' p.slug %}" class="product-title">{{p.name}}</a></h3>
+                    <p class="product-price"><strong>Цена:</strong> {{ p.price }}</p>
+                   <hr>
+         </li>
+         {% endfor %}
+</ul>
+{% endblock %}
