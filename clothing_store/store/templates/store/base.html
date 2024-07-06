@@ -2,53 +2,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-         <title>{{title}}</title>
-      <link rel="stylesheet" href="{% static 'store/css/styles.css' %}">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="{% static 'store/css/styles.css' %}">
 </head>
 <body>
- <table class="table-page" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td valign="top">
-                {% block mainmenu %}
-                        <ul id="mainmenu" class="mainmenu">
-                                {% for m in menu %}
-                                <li><a href="{% url m.url_name %}">{{m.title}}</a></li>
-                                {% endfor %}
-                                {% if request.user.is_authenticated %}
-                                    <li class="last"> {{user.username}} | <a href="{% url 'logout' %}">Выйти</a></li>
-                                {% else %}
-                                    <li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a></li>
-                                {% endif %}
-                        </ul>
-                <div class="clear"></div>
-                {% endblock mainmenu %}
+<table class="table-page" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top">
+            {% block mainmenu %}
+            <ul id="mainmenu" class="mainmenu">
+                {% for m in menu %}
+                <li><a href="{% url m.url_name %}">{{m.title}}</a></li>
+                {% endfor %}
+                {% if request.user.is_authenticated %}
+                <li class="last"> {{user.username}} | <a href="{% url 'logout' %}">Выйти</a></li>
+                {% else %}
+                <li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a>
+                </li>
+                {% endif %}
+            </ul>
+            <div class="clear"></div>
+            {% endblock mainmenu %}
 
-{% block content %}
-{% endblock %}
-{% if page_obj.has_other_pages %}
-<nav class="pagination-nav">
-    <ul class="pagination">
-        {% if page_obj.has_previous %}
-        <li class="page-num">
-            <a href="?page={{ page_obj.previous_page_number }}" class="page-link">&lt;</a>
-        </li>
-        {% endif %}
-        {% for p in page_obj.paginator.page_range %}
-        {% if page_obj.number == p %}
-        <li class="page-num page-num-selected">{{ p }}</li>
-        {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
-        <li class="page-num">
-            <a href="?page={{ p }}" class="page-link">{{ p }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-        <li class="page-num">
-            <a href="?page={{ page_obj.next_page_number }}" class="page-link">&gt;</a>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
+
+            <table class="table-content" border=0 cellpadding="0" cellspacing="0">
+                <tr>
+                    <!-- Sidebar слева -->
+                    <td valign="top" class="left-chapters">
+                        <ul id="leftchapters">
+                            {% if request.resolver_match.url_name != 'home' %}
+                                {% if cat_selected == 0 %}
+                                <li class="selected">Все категории</li>
+                                {% else %}
+                                <li><a href="{% url 'products' %}">Все категории</a></li>
+                                {% endif %}
+                            {% else %}
+                                <li><a href="{% url 'products' %}">Все категории</a></li>
+                            {% endif %}
+
+                            {% for c in cats %}
+                                {% if c.products__count > 0 %}
+                                {% if c.pk == cat_selected %}
+                                <li class="selected">{{c.name}}</li>
+                                {% else %}
+                                <li><a href="{{ c.get_absolute_url }}">{{c.name}}</a></li>
+                                {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td valign="top" class="content">
+                        <div class="content-text">
+                            {% block content %}
+                            {% endblock %}
+                            {% if page_obj.has_other_pages %}
+                            <nav class="pagination-nav">
+                                <ul class="pagination">
+                                    {% if page_obj.has_previous %}
+                                    <li class="page-num">
+                                        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">&lt;</a>
+                                    </li>
+                                    {% endif %}
+                                    {% for p in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == p %}
+                                    <li class="page-num page-num-selected">{{ p }}</li>
+                                    {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                                    <li class="page-num">
+                                        <a href="?page={{ p }}" class="page-link">{{ p }}</a>
+                                    </li>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% if page_obj.has_next %}
+                                    <li class="page-num">
+                                        <a href="?page={{ page_obj.next_page_number }}" class="page-link">&gt;</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                            {% endif %}
+                        </div>
+                        <!-- Конец блока контента -->
+
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
 </body>
 </html>
