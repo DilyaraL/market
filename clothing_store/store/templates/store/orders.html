@@ -1,14 +1,14 @@
 {% extends 'store/base.html' %}
- 
 {% block content %}
 <h1>{{title}}</h1>
 <ul>
          {% for order in orders %}
          <li>
+             <a href="{% url 'one_order' order.pk %}"><strong>Заказ № </strong> {{ order.pk }}<br></a>
                     <strong>Статус:</strong> {{ order.status_display }}<br>
-                    <strong>Продукт:</strong> {{ order.product_name }}<br>
-                    <strong>Количество:</strong> {{ order.quantity }}<br>
-                    <strong>Цена:</strong> {{ order.price }}<br>
+                    <strong>Заказчик:</strong> {{ order.customer }}<br>
+                    <strong>Адрес:</strong> {{ order.address }}<br>
+                    <strong>Сумма заказа:</strong> {{ order.total_price }}<br>
                     <strong>Дата:</strong> {{ order.date }}<br>
          </li>
          {% endfor %}

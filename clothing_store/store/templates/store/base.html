@@ -30,12 +30,8 @@
                     <!-- Sidebar слева -->
                     <td valign="top" class="left-chapters">
                         <ul id="leftchapters">
-                            {% if request.resolver_match.url_name != 'home' %}
-                                {% if cat_selected == 0 %}
+                            {% if request.resolver_match.url_name == 'products' and cat_selected == 0 %}
                                 <li class="selected">Все категории</li>
-                                {% else %}
-                                <li><a href="{% url 'products' %}">Все категории</a></li>
-                                {% endif %}
                             {% else %}
                                 <li><a href="{% url 'products' %}">Все категории</a></li>
                             {% endif %}

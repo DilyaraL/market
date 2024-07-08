@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 
-from .forms import OrderForm
+from .forms import OrderForm, OrderItemFormSet
 from .models import *
 from .utils import *
 
@@ -69,11 +69,14 @@ class ShowOrder(DataMixin, DetailView):
     context_object_name = 'order'
 
     def get_object(self):
-        order = Order.objects.get(pk=self.kwargs['pk'])
-        return order
+        return Order.objects.get(pk=self.kwargs['pk'])
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
+        order = self.get_object()
+        order_items = OrderItem.objects.filter(order=order)
+
+        context['order_items'] = order_items
         c_def = self.get_user_context(title="Заказ")
         context.update(c_def)
         return context
@@ -101,21 +104,36 @@ class Orders(DataMixin, ListView):
 class CreateOrderView(View):
 
     def get(self, request):
-        form = OrderForm()
-        return render(request, 'store/create_order.html', {'form': form})
+        order_form = OrderForm()
+        order_item_formset = OrderItemFormSet()
+        return render(request, 'store/create_order.html', {
+            'order_form': order_form,
+            'order_item_formset': order_item_formset,})
 
     def post(self, request):
-        form = OrderForm(request.POST)
-        if form.is_valid():
+        order_form = OrderForm(request.POST)
+        order_item_formset = OrderItemFormSet(request.POST)
+        if order_form.is_valid() and order_item_formset.is_valid():
             with transaction.atomic():
-                order = form.save(commit=False)
+                order = order_form.save(commit=False)
                 order.customer = request.user  # предполагается, что пользователь аутентифицирован
-                order.price = order.product.price * order.quantity  # предполагается, что цена продукта хранится в объекте product
-                order.product.quantity -= order.quantity
-                order.product.save()
                 order.save()
+
+                order_items = order_item_formset.save(commit=False)
+
+                for item in order_items:
+                    item.order = order
+                    item.price = item.product.price * item.quantity  # расчет стоимости продукта в заказе
+
+                    # Обновляем количество продуктов
+                    item.product.quantity -= item.quantity
+                    item.product.save()
+                    item.save()
                 return redirect('orders')  # перенаправление на страницу с заказами после успешного создания
-        return render(request, 'store/create_order.html', {'form': form})
+        return render(request, 'store/create_order.html', {
+            'order_form': order_form,
+            'order_item_formset': order_item_formset,
+        })
 
 
 class RegisterUser(DataMixin, CreateView):

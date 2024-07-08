@@ -7,7 +7,7 @@ urlpatterns = [
     path('products/', Product.as_view(), name='products'),
     path('products/categories/<slug:cat_slug>/', Product.as_view(), name='cat_products'),
     path('products/<slug:prod_slug>', ShowProduct.as_view(), name='one_product'),
-    path('orders/<int:pk>', ShowOrder.as_view()),
+    path('orders/<int:pk>', ShowOrder.as_view(), name='one_order'),
     path('orders/', Orders.as_view(), name='orders'),
     path('orders/create/', CreateOrderView.as_view(), name='create_order'),
     path('login/', LoginUser.as_view(), name='login'),

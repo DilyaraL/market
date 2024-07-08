@@ -1,10 +1,66 @@
 {% extends 'store/base.html' %}
 
 {% block content %}
-  <h2>Создать заказ</h2>
-  <form method="post">
+<h1>Создать заказ</h1>
+<form id="order-form" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ order_form.as_p }}
+    <fieldset id="order-items">
+        {{ order_item_formset.management_form }}
+        <h2>Продукты</h2>
+        <div id="formset">
+            {% for form in order_item_formset %}
+                <div class="formset-row">
+                    {{ form.as_p }}
+                    <button type="button" class="delete-row">Удалить</button>
+                </div>
+            {% endfor %}
+        </div>
+        <button type="button" class="add-row">Добавить продукт</button>
+    </fieldset>
     <button type="submit">Создать заказ</button>
-  </form>
+</form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div id="empty-form-template" style="display: none;">
+    {% with empty_form=order_item_formset.empty_form %}
+        <div class="formset-row">
+            {{ empty_form.as_p }}
+            <button type="button" class="delete-row">Удалить</button>
+        </div>
+    {% endwith %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    var form_idx = $('#id_orderitem_set-TOTAL_FORMS').val();
+
+    $('.add-row').click(function() {
+        var newForm = $('#empty-form-template').html().replace(/__prefix__/g, form_idx);
+        $('#formset').append(newForm);
+        form_idx++;
+        $('#id_orderitem_set-TOTAL_FORMS').val(form_idx);
+    });
+
+    $(document).on('click', '.delete-row', function() {
+        $(this).closest('.formset-row').remove();
+        var forms = $('.formset-row');
+        $('#id_orderitem_set-TOTAL_FORMS').val(forms.length);
+        forms.each(function(index, form) {
+            $(form).find(':input').each(function() {
+                updateElementIndex(this, index);
+            });
+        });
+    });
+
+    function updateElementIndex(el, index) {
+        var id_regex = new RegExp('(id_orderitem_set-\\d+-)');
+        var replacement = 'id_orderitem_set-' + index + '-';
+        if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+        if (el.id) el.id = el.id.replace(id_regex, replacement);
+        if (el.name) el.name = el.name.replace(id_regex, replacement);
+    }
+});
+</script>
 {% endblock %}
+
