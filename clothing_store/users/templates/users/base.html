@@ -19,7 +19,10 @@
                 {% else %}
                 <li class="last"><a href="{% url 'users:register' %}">Регистрация</a> | <a href="{% url 'users:login' %}">Войти</a> </li>
                 {% endif %}
-                <li><a href="{% url 'orders:create_order' %}">Заказать</a></li>
+                <li><a href="{% url 'orders:create_order' %}">Заказать</a>
+                {% if request.user.is_authenticated %}
+                | <a href="{% url 'orders:orders' %}">Заказы</a> {% endif %}
+                </li>
             </ul>
             <div class="clear"></div>
             {% endblock mainmenu %}
