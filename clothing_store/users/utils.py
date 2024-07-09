@@ -1,6 +1,7 @@
 from django.db.models import Count
 
-from .models import *
+from catalog.models import *
+
 
 menu = [{'title': "О сайте", 'url_name': 'home'}
         ]
@@ -14,8 +15,6 @@ class DataMixin:
         cats = Category.objects.annotate(Count('products'))
 
         user_menu = menu.copy()
-        # if not self.request.user.is_authenticated:
-        #     user_menu.pop(1)
 
         context['menu'] = user_menu
         context['cats'] = cats

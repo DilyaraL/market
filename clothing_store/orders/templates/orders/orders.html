@@ -1,10 +1,10 @@
-{% extends 'store/base.html' %}
+{% extends 'users/base.html' %}
 {% block content %}
 <h1>{{title}}</h1>
 <ul>
          {% for order in orders %}
          <li>
-             <a href="{% url 'one_order' order.pk %}"><strong>Заказ № </strong> {{ order.pk }}<br></a>
+             <a href="{% url 'orders:one_order' order.pk %}"><strong>Заказ № </strong> {{ order.pk }}<br></a>
                     <strong>Статус:</strong> {{ order.status_display }}<br>
                     <strong>Заказчик:</strong> {{ order.customer }}<br>
                     <strong>Адрес:</strong> {{ order.address }}<br>

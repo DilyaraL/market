@@ -22,7 +22,9 @@ from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('store.urls')),
+    path('products/', include('catalog.urls', namespace='catalog')),
+    path('orders/', include('orders.urls', namespace='orders')),
+    path('', include('users.urls', namespace='users')),
 ]
 
 if settings.DEBUG:

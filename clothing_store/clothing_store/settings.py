@@ -10,9 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+if __name__ == "__main__":
+    # Добавляем корневую директорию проекта в sys.path
+    sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "clothing_store.settings")
+    try:
+        from django.core.management import execute_from_command_line
+    except ImportError as exc:
+        raise ImportError(
+            "Couldn't import Django. Are you sure it's installed and "
+            "available on your PYTHONPATH environment variable? Did you "
+            "forget to activate a virtual environment?"
+        ) from exc
+    execute_from_command_line(sys.argv)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -37,7 +52,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'store.apps.StoreConfig'
+    'catalog.apps.CatalogConfig',
+    'orders.apps.OrdersConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +72,7 @@ ROOT_URLCONF = 'clothing_store.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,8 +133,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / "store/static"]
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+  # Путь для сбора всех статических файлов (для деплоя)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
