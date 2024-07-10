@@ -13,14 +13,6 @@ import os
 import sys
 from pathlib import Path
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-# Оставшийся код manage.py
-if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "clothing_store.settings")
-    from django.core.management import execute_from_command_line
-    execute_from_command_line(sys.argv)
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
