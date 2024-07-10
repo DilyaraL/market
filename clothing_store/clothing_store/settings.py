@@ -13,19 +13,12 @@ import os
 import sys
 from pathlib import Path
 
-if __name__ == "__main__":
-    # Добавляем корневую директорию проекта в sys.path
-    sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+# Оставшийся код manage.py
+if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "clothing_store.settings")
-    try:
-        from django.core.management import execute_from_command_line
-    except ImportError as exc:
-        raise ImportError(
-            "Couldn't import Django. Are you sure it's installed and "
-            "available on your PYTHONPATH environment variable? Did you "
-            "forget to activate a virtual environment?"
-        ) from exc
+    from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
 
 BASE_DIR = Path(__file__).resolve().parent.parent

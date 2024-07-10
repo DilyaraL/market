@@ -113,6 +113,10 @@ header {
 
 /* Стили для контента (правая панель) */
 
+.table-content {
+    padding-bottom: 20px;
+}
+
 .content {
     padding-left: 20px;
 }
