@@ -2,9 +2,11 @@
  
 {% block content %}
 <div class="product-detail">
-<img src="{{ product.image.url }}" alt="{{ product.name }}">
-<h3>{{product.name}}</h3>
-<strong>Цена:</strong> {{ product.price }}</p>
-<strong>Описание:</strong> {{product.description}}</p>
+    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    <h3>{{product.name}}</h3>
+    <strong>Цена:</strong> {{ product.price }}</p>
+    <div class="product-detail__description">
+        <strong>Описание:</strong> {{product.description}}</p>
+    </div>
 </div>
 {% endblock %}

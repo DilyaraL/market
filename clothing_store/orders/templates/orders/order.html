@@ -9,7 +9,9 @@
 <ul>
     {% for item in order_items %}
     <li>
-        <strong>{{ item.product.name }}</strong><br>
+        <a href="{% url 'catalog:one_product' item.product.slug %}">
+            <strong>{{ item.product.name }}</strong><br>
+        </a>
         Количество: {{ item.quantity }}<br>
         Цена за единицу: {{ item.product.price }}<br>
         Итоговая стоимость: {{ item.price }}

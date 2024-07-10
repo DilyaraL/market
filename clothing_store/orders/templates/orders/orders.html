@@ -1,16 +1,20 @@
 {% extends 'users/base.html' %}
 {% block content %}
 <h1>{{title}}</h1>
-<ul>
-         {% for order in orders %}
-         <li>
-             <a href="{% url 'orders:one_order' order.pk %}"><strong>Заказ № </strong> {{ order.pk }}<br></a>
-                    <strong>Статус:</strong> {{ order.status_display }}<br>
-                    <strong>Заказчик:</strong> {{ order.customer }}<br>
-                    <strong>Адрес:</strong> {{ order.address }}<br>
-                    <strong>Сумма заказа:</strong> {{ order.total_price }}<br>
-                    <strong>Дата:</strong> {{ order.date }}<br>
-         </li>
-         {% endfor %}
+<ul class="order-list">
+    {% for order in orders %}
+    <li class="order-item">
+        <div class="order-container">
+            <a href="{% url 'orders:one_order' order.pk %}">
+                <strong>Заказ № </strong> {{ order.pk }}<br>
+            </a>
+            <strong>Статус:</strong> {{ order.status_display }}<br>
+            <strong>Заказчик:</strong> {{ order.customer }}<br>
+            <strong>Адрес:</strong> {{ order.address }}<br>
+            <strong>Сумма заказа:</strong> {{ order.total_price }}<br>
+            <strong>Дата:</strong> {{ order.date }}<br>
+        </div>
+    </li>
+    {% endfor %}
 </ul>
 {% endblock %}
