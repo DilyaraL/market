@@ -14,7 +14,9 @@ class ShowOrder(DataMixin, DetailView):
     context_object_name = 'order'
 
     def get_object(self):
-        return Order.objects.get(pk=self.kwargs['pk'])
+        # return Order.objects.get(pk=self.kwargs['pk'])
+        # Лучше так, тк если не будет найдем объект метод get() упадет
+        return Order.objects.filter(pk=self.kwargs['pk']).first()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -71,16 +73,19 @@ class CreateOrderView(DataMixin, View):
             with transaction.atomic():
                 order = order_form.save(commit=False)
                 order.customer = request.user  # предполагается, что пользователь аутентифицирован
+                # но нигде не проверяем, нужно добавить проверку
                 order.save()
 
                 order_items = order_item_formset.save(commit=False)
 
-                for item in order_items:
+                # for item in order_items:
+                for item in order_items.iterator():
                     item.order = order
                     item.price = item.product.price * item.quantity  # расчет стоимости продукта в заказе
 
                     # Обновляем количество продуктов
                     item.product.quantity -= item.quantity
+                    # не очень оптимально, тк каждый раз в БД обращаешься, лучше один раз после цикла for
                     item.product.save()
                     item.save()
                 return redirect('orders:orders')  # перенаправление на страницу с заказами после успешного создания

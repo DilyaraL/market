@@ -2,9 +2,13 @@ from django.db.models import Count
 
 from catalog.models import *
 
-
-menu = [{'title': "О сайте", 'url_name': 'home'}
-        ]
+# некрасивое форматирование
+menu = [
+    {
+    'title': "О сайте",
+    'url_name': 'home'
+    }
+]
 
 
 class DataMixin:
