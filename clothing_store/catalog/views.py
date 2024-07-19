@@ -4,7 +4,6 @@ from .models import *
 from users.utils import DataMixin
 
 
-
 class Product(DataMixin, ListView):
     model = Products
     template_name = 'catalog/products.html'
@@ -36,7 +35,7 @@ class ShowProduct(DataMixin, DetailView):
     context_object_name = 'product'
 
     def get_object(self):
-        return Products.objects.get(slug=self.kwargs['prod_slug'])
+        return Products.objects.filter(slug=self.kwargs['prod_slug']).first()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: markerplace
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: .
+      dockerfile: C:/Users/dilya/PycharmProjects/marketplace/clothing_store/Dockerfile
+    command: gunicorn clothing_store.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://user:123456@db:5432/markerplace
+
+volumes:
+  postgres_data:
+  static_volume:

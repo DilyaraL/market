@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>Создать заказ</h1>
+
 <form id="order-form" method="post">
     {% csrf_token %}
     {{ order_form.as_p }}
@@ -9,6 +10,11 @@
         {{ order_item_formset.management_form }}
         <h2>Продукты</h2>
         <div id="formset">
+
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+
             {% for form in order_item_formset %}
                 <div class="formset-row">
                     {{ form.as_p }}

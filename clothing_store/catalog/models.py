@@ -13,6 +13,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
     def get_absolute_url(self):
         return reverse('catalog:cat_products', kwargs={'cat_slug': self.slug})
 
@@ -28,6 +31,9 @@ class Products(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
 
     def get_html_photo(self, object):
         if object.photo:

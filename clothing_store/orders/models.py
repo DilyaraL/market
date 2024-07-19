@@ -3,7 +3,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.db import models
 
-from catalog.models import Products
+from catalog.models import *
 
 
 class Order(models.Model):
@@ -22,6 +22,9 @@ class Order(models.Model):
 
     def __str__(self):
         return f'Order {self.id} by {self.customer.username}'
+
+    class Meta:
+        ordering = ['date']
 
     @property
     def status_display(self):
@@ -44,3 +47,6 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f'{self.product.name} (x{self.quantity}) for order {self.order.id}'
+
+    class Meta:
+        ordering = ['product']

@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.views import LoginView
@@ -29,6 +30,10 @@ class RegisterUser(DataMixin, CreateView):
         c_def = self.get_user_context(title="Регистрация")
         context.update(c_def)
         return context
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Пользователь с таким именем уже существует')
+        return super().form_invalid(form)
 
 
 class LoginUser(DataMixin, LoginView):

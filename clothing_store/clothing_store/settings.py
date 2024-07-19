@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import dj_database_url
 import sys
 from pathlib import Path
 
@@ -77,13 +78,16 @@ WSGI_APPLICATION = 'clothing_store.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL')
+    )
 }
 
+if 'test' in sys.argv:
+    DATABASES['default']['NAME'] = 'test_' + DATABASES['default']['NAME']
 
+print("DATABASE_URL:", os.environ.get('DATABASE_URL'))
+ALLOWED_HOSTS = ['*']
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -122,6 +126,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
   # Путь для сбора всех статических файлов (для деплоя)
 
 # Default primary key field type

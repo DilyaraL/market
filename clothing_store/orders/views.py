@@ -1,4 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import ListView, DetailView
@@ -7,6 +9,8 @@ from .forms import OrderForm, OrderItemFormSet
 from .models import *
 from users.utils import *
 
+from catalog.models import Products
+
 
 class ShowOrder(DataMixin, DetailView):
     model = Order
@@ -14,7 +18,7 @@ class ShowOrder(DataMixin, DetailView):
     context_object_name = 'order'
 
     def get_object(self):
-        return Order.objects.get(pk=self.kwargs['pk'])
+        return Order.objects.filter(pk=self.kwargs['pk']).first()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -49,44 +53,73 @@ class Orders(DataMixin, ListView):
 class CreateOrderView(DataMixin, View):
     model = Order
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title="Создание заказа")
-        context.update(c_def)
-        return context
 
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('users:login')
         order_form = OrderForm()
         order_item_formset = OrderItemFormSet()
-        return render(request, 'orders/create_order.html', {
-            'order_form': order_form,
-            'order_item_formset': order_item_formset, })
+        context = self.get_context_data(order_form=order_form, order_item_formset=order_item_formset)
+        return render(request, 'orders/create_order.html', context)
 
     def post(self, request):
         order_form = OrderForm(request.POST)
         order_item_formset = OrderItemFormSet(request.POST)
         if order_form.is_valid() and order_item_formset.is_valid():
-            with transaction.atomic():
-                order = order_form.save(commit=False)
-                order.customer = request.user  # предполагается, что пользователь аутентифицирован
-                order.save()
+            try:
+                with transaction.atomic():
+                    order = order_form.save(commit=False)
+                    if request.user.is_authenticated:
+                        order.customer = request.user
+                        order.save()
+                    else:
+                        return redirect('users:login')
 
-                order_items = order_item_formset.save(commit=False)
+                    order_items = order_item_formset.save(commit=False)
 
-                for item in order_items:
-                    item.order = order
-                    item.price = item.product.price * item.quantity  # расчет стоимости продукта в заказе
+                    product_quantities = {}
 
-                    # Обновляем количество продуктов
-                    item.product.quantity -= item.quantity
-                    item.product.save()
-                    item.save()
-                return redirect('orders:orders')  # перенаправление на страницу с заказами после успешного создания
-        return render(request, 'orders/create_order.html', {
-            'order_form': order_form,
-            'order_item_formset': order_item_formset,
-        })
+                    for item in order_items:
+                        item.order = order
+                        item.price = item.product.price * item.quantity  # расчет стоимости продукта в заказе
 
+                        # Обновляем количество продуктов
+                        if item.product.id in product_quantities:
+                            product_quantities[item.product.id] += item.quantity
+                        else:
+                            product_quantities[item.product.id] = item.quantity
+
+                    for product_id, quantity in product_quantities.items():
+                        product = Products.objects.get(id=product_id)
+                        if product.quantity < quantity:
+                            raise ValidationError(f'Недостаточное количество продукта "{product.name}" на складе.')
+
+                    # Сохраняем все items после проверки доступного количества
+                    for item in order_items:
+                        item.save()
+
+                    # Обновляем количество продуктов на складе
+                    for product_id, quantity in product_quantities.items():
+                        product = Products.objects.get(id=product_id)
+                        product.quantity -= quantity
+                        product.save()
+
+                    return redirect('orders:orders')  # перенаправление на страницу с заказами после успешного создания
+
+            except ValidationError as e:
+                # seen_products = set()
+                # for item in order_item_formset.forms:
+                #     if item.cleaned_data and not item.cleaned_data.get('DELETE'):
+                #         product_id = item.cleaned_data['product'].id
+                #         if product_id in seen_products:
+                #             item.cleaned_data['DELETE'] = True
+                #         else:
+                #             item.cleaned_data['quantity'] = 1
+                #             seen_products.add(product_id)
+
+                context = self.get_context_data(order_form=order_form, order_item_formset=OrderItemFormSet(), error=e.message)
+                return render(request, 'orders/create_order.html', context)
+
+        context = self.get_context_data(order_form=order_form, order_item_formset=order_item_formset)
+        return render(request, 'orders/create_order.html', context)
 

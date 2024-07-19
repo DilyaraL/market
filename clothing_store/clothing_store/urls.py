@@ -25,7 +25,7 @@ urlpatterns = [
     path('products/', include('catalog.urls', namespace='catalog')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('', include('users.urls', namespace='users')),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
