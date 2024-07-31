@@ -1,0 +1,291 @@
+/* static/css/styles.css */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #ff6f61;
+}
+
+/* Стили для header (шапка сайта) */
+
+header {
+    background-color: #fff;
+    border-bottom: 1px solid #e6e6e6;
+    padding: 20px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.table-page {
+    width: 100%;
+}
+
+.mainmenu {
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid gray;
+}
+
+.mainmenu__about {
+    display: flex;
+    flex-direction: column;
+}
+
+.mainmenu__about li:first-child {
+    margin-bottom: 12px;
+}
+
+#mainmenu {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#mainmenu li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+#mainmenu li.last {
+    margin-right: 0;
+}
+
+#mainmenu li a {
+    font-size: 16px;
+    color: #333;
+}
+
+#mainmenu li a:hover {
+    color: #ff6f61;
+}
+
+/* Стили для sidebar (левая панель) */
+
+.categories {
+    padding-left: 50px;
+}
+
+.left-chapters {
+    width: 150px;
+    padding-right: 10px;
+    border-right: 1px solid #e6e6e6;
+    margin-left: 20px; /* Отступ от левой границы */
+}
+
+#leftchapters {
+    margin-top: 20px;
+}
+
+#leftchapters li {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+#leftchapters li.selected {
+    font-weight: bold;
+    border-radius: 5px;
+    color: #666; /* Цвет выбранной категории - графитовый */
+    background-color: #000; /* Added background color to match the image */
+    color: #fff; /* Changed text color to white to match the image */
+    padding: 5px 10px; /* Add padding to make the background larger than the text */
+    display: inline-block; /* Ensure the padding is applied correctly */
+}
+
+
+/* Стили для контента (правая панель) */
+
+.table-content {
+    padding-bottom: 20px;
+}
+
+.content {
+    padding-left: 20px;
+}
+
+.content-text {
+    margin-top: 20px;
+}
+
+
+/* Стили списка продуктов */
+
+.product-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.product-list li {
+    background-color: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    padding: 10px;
+    width: 200px; /* 3 колонки */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #e6e6e6;
+    margin-bottom: 10px;
+}
+
+.product-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 0 10px;
+    text-decoration: none;
+}
+
+.product-price {
+    font-size: 14px;
+    color: #999;
+}
+
+/* Стили деталей продукта */
+
+.product-detail {
+    max-width: min-content;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product-detail img {
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.product-detail h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.product-detail p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Стили кнопок */
+
+button {
+    background-color: #000; /* Черный цвет фона кнопок */
+    color: #fff; /* Белый цвет шрифта на кнопках */
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+button:hover {
+    background-color: #333; /* Темно-серый цвет фона кнопок при наведении */
+}
+/* Стили заказа  */
+#order-items {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.order-list {
+    list-style: none;
+    padding: 0;
+}
+
+.order-item {
+    margin-bottom: 20px; /* Отступ между заказами */
+}
+.order-container {
+    border: 1px solid #ccc; /* Цвет рамки */
+    border-radius: 10px; /* Скругленные углы */
+    padding: 15px; /* Внутренние отступы */
+    background-color: #f9f9f9; /* Цвет фона */
+}
+
+/* Стили футера */
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 20px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+
+/* Пагинация */
+.pagination-nav {
+    display: flex;
+    justify-content: center;
+    position: fixed; /* Фиксируем позицию */
+    bottom: 10px; /* Располагаем внизу экрана, можно изменить по необходимости */
+    width: 75%; /* Ширина, чтобы центрировать содержимое */
+    padding: 10px 0; /* Внутренние отступы */
+    z-index: 1000; /* Увеличиваем z-index, чтобы элементы пагинации были поверх другого контента */
+}
+
+
+.pagination {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.page-num {
+    margin: 0 3px; /* минимальный отступ между цифрами */
+}
+
+.page-link {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.page-link:hover {
+    background-color: #e6e6e6;
+    color: #333;
+}
+
+.page-num-selected {
+    padding: 10px 15px;
+    color: #333;
+    background-color: #f5f5f5;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+}
